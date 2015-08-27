@@ -1,0 +1,34 @@
+{
+  "name": "qube-excel",
+  "version": "0.0.1",
+  "description": "Adds excel functionality to qube",
+  "main": "index.js",  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nikk1e/qube-excel.git"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "qube",
+    "excel",
+    "js-xlsx"
+  ],
+  "author": {
+    "name": "Nick Andrews"
+  },
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/nikk1e/qube-excel/issues"
+  },
+  "dependencies": {    
+    "xlsx": "git://github.com/nikk1e/js-xlsx",    
+    "jszip": "2.4.0"
+  },
+  "homepage": "https://github.com/nikk1e/qube-excel"
+}
