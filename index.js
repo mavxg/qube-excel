@@ -13,26 +13,26 @@ function MergeBooks(data, template) {
 	
 	var tb = (template instanceof excel.Workbook) ? template : new excel.Workbook(template);
 
+	var sheetsModified = [];
 	wb.sheet_names().forEach(function(sheetName){
 		//If you find the sheetname in the template, switch out the data
 		var templatePath = tb.find_sheet_path(sheetName);
 		if(templatePath){
 			var dataSheet = wb.read_sheet(wb.find_sheet_path(sheetName));
 			var range = wb.sheet_datarange(dataSheet);
+			var sheetData = dataSheet.match(/\<sheetData.*sheetData\>/g)[0];
 
-			//Replace the data
-			tb.replace_sheet_contents(sheetName, dataSheet);
+			tb.replace_sheet_data(sheetName,sheetData,range);
+			sheetsModified.push(sheetName);
 
 			//If there is a datatable referencing the sheet replace the range, remove any sorts
-			if(tb.has_datatable(sheetName)){
-
-				//Think this is wrong as we need to get the table.xml
-				var templateXml = tb.read_sheet(templatePath);
-				templateXml = templateXml.replace(/ref\=\"[A-z0-9:]*\"/gm,"ref=\""+range+"\"");
+			var tablePath = tb.find_table_path(sheetName);
+			if(tablePath) {			
+				var templateXml = tb.read_sheet(tablePath);
+				templateXml = templateXml.replace(/ref\=\"[A-z0-9:]*\"/g,"ref=\""+range+"\"");
 				templateXml = templateXml.replace(/<sort.*State>/,"");
-
-				//Not sheetname...?
-				tb.replace_sheet_contents(sheetName, templateXml);
+				
+				tb.replace_sheet_contents(tablePath, templateXml);
 			}
 		} 
 		//Clear the template cache
@@ -41,10 +41,16 @@ function MergeBooks(data, template) {
 	return tb.toFile();
 }
 
+function Worksheet(data, params){
+	var headers = data.headers;
+	var dimensions = data.dimensions.length;
+	return excel.Worksheet(headers, data, dimensions, params);
+}
+
 module.exports = {
 	Workbook: Workbook,	
-	Worksheet: excel.Worksheet,	
-	MergeBooks: MergeBooks,
+	Worksheet: Worksheet,	
+	MergeBooks: MergeBooks,	
 };
 
 /**
