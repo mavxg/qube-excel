@@ -12,8 +12,7 @@ function MergeBooks(data, template) {
 	if(!template) return wb.toFile();
 	
 	var tb = (template instanceof excel.Workbook) ? template : new excel.Workbook(template);
-
-	var sheetsModified = [];
+	
 	wb.sheet_names().forEach(function(sheetName){
 		//If you find the sheetname in the template, switch out the data
 		var templatePath = tb.find_sheet_path(sheetName);
@@ -21,17 +20,14 @@ function MergeBooks(data, template) {
 			var dataSheet = wb.read_sheet(wb.find_sheet_path(sheetName));
 			var range = wb.sheet_datarange(dataSheet);
 			var sheetData = dataSheet.match(/\<sheetData.*sheetData\>/g)[0];
-
 			tb.replace_sheet_data(sheetName,sheetData,range);
-			sheetsModified.push(sheetName);
-
+			
 			//If there is a datatable referencing the sheet replace the range, remove any sorts
 			var tablePath = tb.find_table_path(sheetName);
 			if(tablePath) {			
 				var templateXml = tb.read_sheet(tablePath);
 				templateXml = templateXml.replace(/ref\=\"[A-z0-9:]*\"/g,"ref=\""+range+"\"");
-				templateXml = templateXml.replace(/<sort.*State>/,"");
-				
+				templateXml = templateXml.replace(/<sort.*State>/,"");				
 				tb.replace_sheet_contents(tablePath, templateXml);
 			}
 		} 
@@ -43,7 +39,7 @@ function MergeBooks(data, template) {
 
 function Worksheet(data, params){
 	var headers = data.headers;
-	var dimensions = data.dimensions.length;
+	var dimensions = (data.dimensions || []).length;
 	return excel.Worksheet(headers, data, dimensions, params);
 }
 
