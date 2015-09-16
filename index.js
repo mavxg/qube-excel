@@ -30,10 +30,12 @@ function MergeBooks(data, template) {
 				templateXml = templateXml.replace(/<sort.*State>/,"");				
 				tb.replace_sheet_contents(tablePath, templateXml);
 			}
-		} 
-		//Clear the template cache
-		tb.clean_cache();			
+		}					
 	});
+	//Clear the template cache
+	//tb.clean_cache();
+	//Set calc properties
+	tb.set_calc_properties('fullCalcOnLoad="1"');
 	return tb.toFile();
 }
 
