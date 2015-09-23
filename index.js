@@ -32,16 +32,19 @@ function MergeBooks(data, template) {
 			}
 		}					
 	});
-	//Clear the template cache
-	//tb.clean_cache();
 	//Set calc properties
 	tb.set_calc_properties('fullCalcOnLoad="1"');
 	return tb.toFile();
 }
 
 function Worksheet(data, params){
-	var headers = data.headers;
+	var headers = data.headers || params.headers;
 	var dimensions = (data.dimensions || []).length;
+
+	//If its a single array with more than one column pivot columnwise
+	if(!Array.isArray(data[0]) && headers.length > 1)
+		data = [data];
+
 	return excel.Worksheet(headers, data, dimensions, params);
 }
 
