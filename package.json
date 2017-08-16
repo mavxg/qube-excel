@@ -28,7 +28,7 @@
   },
   "dependencies": {    
     "xlsx": "git://github.com/nikk1e/js-xlsx",    
-    "jszip": "2.4.0"
+    "jszip": "2.6.1"
   },
   "homepage": "https://github.com/nikk1e/qube-excel"
 }
